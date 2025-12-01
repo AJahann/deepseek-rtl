@@ -1,66 +1,70 @@
-# React Chrome Extension Template
+# Deepseek RTL Extension
 
-This is a template for creating a Chrome extension using React and [Vite](https://vitejs.dev/) with TypeScript.
+A simple Chrome extension that toggles text direction on pages to improve right-to-left reading, with special handling for code blocks.
 
+## Overview
 
-## Getting Started
+- Injects styles into the active tab when you click the extension button
+- Keeps the toggle state per tab until the tab closes
+- Targets two elements:
+  - `.md-code-block.md-code-block-dark` is set to `direction: ltr` for readable code
+  - `.ds-scroll-area` is set to `direction: rtl` for better RTL reading
 
-### Prerequisites
+Core logic lives in `src/background.ts`:
 
-Make sure you have [Node.js](https://nodejs.org/) (version 18+ or 20+) installed on your machine.
+- Click listener: `src/background.ts:4`
+- Apply styles: `src/background.ts:41`
+- Remove styles: `src/background.ts:63`
 
-### Setup
+## Install
 
-1. Clone or fork the repository :
+1. Ensure Node.js 18 or 20 is installed
+2. Install dependencies:
 
-    ```sh
-    # To clone
-    git clone https://github.com/5tigerjelly/chrome-extension-react-template
-    cd chrome-extension-react-template
-    ```
+   ```sh
+   npm install
+   ```
 
-2. Install the dependencies:
+3. Build the extension:
 
-    ```sh
-    npm install
-    ```
+   ```sh
+   npm run build
+   ```
 
-## 🏗️ Development
+4. Load in Chrome:
+   - Open `chrome://extensions/`
+   - Enable Developer mode
+   - Click Load unpacked and select the `build` folder
 
-To start the development server:
+## Usage
 
-```sh
-npm run dev
-```
+- Click the extension toolbar button to toggle styles on the current tab
+- Click again to remove the styles
+- The toggle is tracked per tab
 
-This will start the Vite development server and open your default browser.
+## Development
 
-## 📦 Build 
+- Start a dev server for the demo page:
 
-To create a production build:
+  ```sh
+  npm run dev
+  ```
 
-```sh
-npm run build
-```
+- Build output is written to `build/`
+- Background service worker is built to `background.js` as required by the manifest
 
-This will generate the build files in the `build` directory.
+## Project Structure
 
-## 📂 Load Extension in Chrome
+- `public/manifest.json` defines permissions and background worker
+- `src/background.ts` runs the toggle and style injection
+- `index.html` and `src/App.tsx` are used by the dev preview
+- `vite.config.ts` configures build targets and copies the manifest
 
-1. Open Chrome and navigate to `chrome://extensions/`.
-2. Enable "Developer mode" using the toggle switch in the top right corner.
-3. Click "Load unpacked" and select the `build` directory.
+## Permissions
 
-Your React app should now be loaded as a Chrome extension!
-
-## 🗂️ Project Structure
-
-- `public/`: Contains static files and the `manifest.json`.
-- `src/`: Contains the React app source code.
-- `vite.config.ts`: Vite configuration file.
-- `tsconfig.json`: TypeScript configuration file.
-- `package.json`: Contains the project dependencies and scripts.
+- Uses `activeTab` and `scripting` to inject styles
+- `host_permissions` is set to `<all_urls>` in `public/manifest.json`
 
 ## License
 
-This project is licensed under the MIT License.
+MIT
